@@ -11,9 +11,9 @@ const AuthContext = createContext<{
     Logout(): void
 }>({
     user: undefined,
-    setUser: () => { },
-    Login: () => { },
-    Logout: () => { }
+    setUser: () => {},
+    Login: () => {},
+    Logout: () => {}
 });
 
 export function SessionProvider(props: React.PropsWithChildren) {
@@ -22,12 +22,12 @@ export function SessionProvider(props: React.PropsWithChildren) {
     const [loading, setLoading] = useState<boolean>(true);
 
     const getStogeContext = useCallback(async () => {
-        const storagedToken = await SecureStore.getItemAsync('access_token');
-        const storagedUser = await SecureStore.getItemAsync('user');
+        const secureStoreToken = await SecureStore.getItemAsync('access_token');
+        const secureStoreUser = await SecureStore.getItemAsync('user');
 
-        if (storagedToken && storagedUser) {
-            setUser(JSON.parse(storagedUser));
-            api.defaults.headers.common['Authorization'] = `Bearer ${storagedToken}`;
+        if (secureStoreToken && secureStoreUser) {
+            setUser(JSON.parse(secureStoreUser));
+            api.defaults.headers.common['Authorization'] = `Bearer ${secureStoreToken}`;
         }
 
         setLoading(false);
@@ -39,8 +39,8 @@ export function SessionProvider(props: React.PropsWithChildren) {
             email,
             password
         }).then(async function (response) {
-            await SecureStore.setItemAsync('access_token', response.data.access_token);
             const user = JSON.stringify(response.data.user);
+            await SecureStore.setItemAsync('access_token', response.data.access_token);
             await SecureStore.setItemAsync('user', user);
             api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
             setUser(JSON.parse(user));
@@ -53,6 +53,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
     const Logout = async () => {
         await SecureStore.deleteItemAsync('access_token');
         await SecureStore.deleteItemAsync('user');
+        api.defaults.headers.common['Authorization'] = undefined;
         setUser(undefined);
     }
 

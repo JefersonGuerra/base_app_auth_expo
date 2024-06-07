@@ -1,6 +1,8 @@
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import { useSession } from "../../context/Auth";
 
+import ButtonTouchableOpacityDefault from "../../components/button/buttonTouchableOpacityDefault";
+
 export default function Index() {
 
   const { Logout, user } = useSession();
@@ -14,7 +16,9 @@ export default function Index() {
       </View>
       <Text className="w-full float-left text-[20px] text-center mt-5">{user?.name}</Text>
       <Text className="w-full float-left text-[15px] text-center mt-5">{user?.email}</Text>
-      <TouchableOpacity onPress={() => Logout()}><Text>SAIR</Text></TouchableOpacity>
+      <View className="w-full flex justify-center items-center mt-5">
+        <ButtonTouchableOpacityDefault label="LOGOUT" onPress={() => Logout()} />
+      </View>
     </View>
   );
 }

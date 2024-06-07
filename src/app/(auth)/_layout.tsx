@@ -7,9 +7,17 @@ export default function AppLayout() {
 
 
   if (!user) {
-    return <Redirect href="login/sign-up" />;
+    return <Redirect href="login/sign-in" />;
   }
 
 
-  return <Stack screenOptions={{title: "HOME"}}/>;
+  return (
+    <Stack
+    screenOptions={{
+      headerShown: false,
+    }}
+    >
+      <Stack.Screen name="index"/>
+    </Stack>
+  );
 }
